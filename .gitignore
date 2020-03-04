@@ -1,0 +1,8 @@
+.cache/
+.projectile
+custom-set-variables.el*
+elpa-*
+projectile*
+recentf*
+transient/
+*~
