@@ -6,3 +6,9 @@ projectile*
 recentf*
 transient/
 *~
+.lsp-session-v1
+eshell/
+workspace/
+snippets/
+url/
+\#recentf\#

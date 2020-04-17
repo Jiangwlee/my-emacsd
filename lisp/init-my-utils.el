@@ -1,4 +1,4 @@
-;;; init-utils.el --- Elisp helper functions and commands -*- lexical-binding: t -*-
+;;; init-my-utils.el --- Some util funtions -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -18,20 +18,6 @@
   "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
-
-
-;;----------------------------------------------------------------------------
-;; String utilities missing from core emacs
-;;----------------------------------------------------------------------------
-(defun sanityinc/string-all-matches (regex str &optional group)
-  "Find all matches for `REGEX' within `STR', returning the full match string or group `GROUP'."
-  (let ((result nil)
-        (pos 0)
-        (group (or group 0)))
-    (while (string-match regex str pos)
-      (push (match-string group str) result)
-      (setq pos (match-end group)))
-    result))
 
 
 ;;----------------------------------------------------------------------------
@@ -77,5 +63,42 @@
       (browse-url (concat "file://" file-name)))))
 
 
-(provide 'init-utils)
-;;; init-utils.el ends here
+(defun jiangwl/copy-matched-strings (regexp)
+"Copy all matched strings.  REGEXP is a regression expression for search.
+It should contains a group, and the matched group content would be returned."
+  (interactive "sRegexp to match: ")
+  (let ((beginning (region-beginning)) (end (region-end)) (result (list)))
+    ;; (setq regexp (concat "\\(" regexp "\\)"))
+    (if (use-region-p)
+	(progn
+	  ;; (message "In active region now! beginning: %d, end: %d" beginning end)
+          (save-excursion
+	    (goto-char beginning)
+	    ;; (message "current position is %d, regexp: %s" (point) regexp)
+	    (while (re-search-forward regexp end t 1)
+	      (setq result
+		    (append result (list (concat "\"" (match-string 1) "\""))))
+	      (message "matched: %s" (match-string 1))))
+	  )
+      (message "the region is still there (from %d to %d), but it is inactive" beginning end))
+    (kill-new (mapconcat 'identity result ", "))
+    )
+  )
+
+(defun jiangwl/normal-font ()
+  "Set the font size to 10pt."
+  (interactive)
+  (set-face-attribute 'default nil :height 100))
+
+(defun jiangwl/small-font ()
+  "Set the font size to 8pt."
+  (interactive)
+  (set-face-attribute 'default nil :height 80))
+
+(defun jiangwl/large-font ()
+  "Set the font size to 14pt."
+  (interactive)
+  (set-face-attribute 'default nil :height 140))
+
+(provide 'init-my-utils)
+;;; init-my-utils ends here

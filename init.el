@@ -1,11 +1,18 @@
+;;; init.el -- The emacs initialization file
+;;; Commentary:
+;;; Code:
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-;; Without this comment emacs25 adds (package-initialize) here
-;; (package-initialize)
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
 
 (let* ((minver "24.4"))
   (when (version< emacs-version minver)
-    (error "Emacs v%s or higher is required." minver)))
+    (error "Emacs v%s or higher is required" minver)))
 
 (defvar best-gc-cons-threshold
   4000000
@@ -13,7 +20,6 @@
 
 ;; don't GC during startup to save time
 (setq gc-cons-threshold most-positive-fixnum)
-
 (setq emacs-load-start-time (current-time))
 
 ;; {{ emergency security fix
@@ -22,6 +28,7 @@
   '(defun enriched-decode-display-prop (start end &optional param)
      (list start end)))
 ;; }}
+
 ;;----------------------------------------------------------------------------
 ;; Which functionality to enable (use t or nil for true and false)
 ;;----------------------------------------------------------------------------
@@ -56,6 +63,8 @@
     (load (file-truename (format "~/.emacs.d/lisp/%s" pkg)) t t)))
 
 (defun local-require (pkg)
+"Load local packages from ~/.emacs.d/site-lisp.
+PKG is the local package name."
   (unless (featurep pkg)
     (load (expand-file-name
            (cond
@@ -85,14 +94,14 @@
   ;; ;; `benchmark-init/show-durations-tree' to show benchmark result
   ;; ;; }}
 
-  (require-init 'init-autoload)
   ;; `package-initialize' takes 35% of startup time
   ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
   ;;(require-init 'init-modeline)
-  (require-init 'init-utils)
+  (require-init 'init-my-utils)
   (require-init 'init-elpa)
   (require-init 'init-global-packages t)
-  (require-init 'init-java t)
+  (require-init 'init-theme t)
+;;  (require-init 'init-java t)
 ;;  (require-init 'init-exec-path t) ;; Set up $PATH
 ;;  ;; Any file use flyspell should be initialized after init-spelling.el
 ;;  (require-init 'init-spelling t)
@@ -135,7 +144,7 @@
 ;;
   ;; don't play with color-theme in light weight mode
   ;; color themes are already installed in `init-elpa.el'
-  (require-init 'init-theme t)
+;;  (require-init 'init-theme t)
 ;;
 ;;  ;; misc has some crucial tools I need immediately
 ;;  (require-init 'init-essential)
